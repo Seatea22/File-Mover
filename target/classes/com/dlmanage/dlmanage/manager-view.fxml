@@ -38,10 +38,14 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dlmanage.dlmanage.FileManageController">
   <children>
@@ -62,12 +66,35 @@
             <SplitPane dividerPositions="0.33, 0.66" prefHeight="375.0" prefWidth="640.0">
               <items>
                   <ListView fx:id="listView" onMouseClicked="#listSelected" prefHeight="373.0" prefWidth="187.0" />
-                  <ListView fx:id="dListView" prefHeight="373.0" prefWidth="211.0" />
+                  <ListView fx:id="dListView" onMouseClicked="#destListSelected" prefHeight="373.0" prefWidth="211.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <Label fx:id="nameLabel" text="Name" />
-                        <Label fx:id="lastMod" text="Last Modified" />
-                        <Label fx:id="fileType" text="File Type" />
+                        <Pane prefHeight="62.0" prefWidth="214.0">
+                           <children>
+                              <VBox prefHeight="62.0" prefWidth="100.0">
+                                 <children>
+                                    <Label fx:id="nameLabel" text="Name" />
+                                    <Label fx:id="lastMod" text="Last Modified" />
+                                    <Label fx:id="fileType" text="File Type" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </Pane>
+                        <Separator prefHeight="0.0" prefWidth="214.0" />
+                        <Pane prefHeight="62.0" prefWidth="214.0">
+                           <children>
+                              <VBox prefHeight="217.0" prefWidth="183.0">
+                                 <children>
+                                    <Label fx:id="nameLabelDest" text="Name" />
+                                    <Label fx:id="lastModDest" text="Last Modified" />
+                                    <TextField fx:id="destExtInput" prefHeight="25.0" prefWidth="214.0" />
+                                    <Button fx:id="destExtButton" mnemonicParsing="false" onAction="#destinationExtSubmit" text="Submit" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Enter the file names associated with the directory seperated by spaces" wrappingWidth="208.11912536621094" />
+                                    <Text fx:id="extensions" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="208.11912536621094" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </Pane>
                      </children>
                   </VBox>
               </items>

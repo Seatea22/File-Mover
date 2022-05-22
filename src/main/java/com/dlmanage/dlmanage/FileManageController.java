@@ -2,26 +2,25 @@ package com.dlmanage.dlmanage;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.*;
-import java.util.Objects;
 
 public class FileManageController {
 
     File mainDirectory;
     File[] fileList;
-    ArrayList<File> directoryList = new ArrayList<>();
+    //ArrayList<File> directoryList = new ArrayList<>();
+    HashMap<File,String[]> directoryList = new HashMap<>();
 
     String audioPath = "C:\\Users\\caleb\\Downloads\\Audio";
     String mcPath = "C:\\Users\\caleb\\Downloads\\Minecraft";
@@ -38,6 +37,12 @@ public class FileManageController {
     public Label lastMod;
     public Label fileType;
 
+    public Label nameLabelDest;
+    public Label lastModDest;
+    public TextField destExtInput;
+    public Button destExtButton;
+    public Text extensions;
+
     @FXML
     public MenuItem openButton;
     public MenuItem openDestButton;
@@ -52,8 +57,10 @@ public class FileManageController {
     public void loadDirectory() {
         if (mainDirectory != null) {
             fileList = mainDirectory.listFiles();
-            for (File f : fileList) {
-                listView.getItems().add(f.getAbsoluteFile());
+            if (fileList != null) {
+                for (File f : fileList) {
+                    listView.getItems().add(f.getAbsoluteFile());
+                }
             }
         } else {
             System.out.println("none");
@@ -63,14 +70,35 @@ public class FileManageController {
     public void openDestFile(ActionEvent actionEvent) {
         DirectoryChooser fileChooser = new DirectoryChooser();
         File newDir = fileChooser.showDialog(null);
+        File[] files = newDir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().equals("config.txt")) {
+                    String[] args = checkConfig(file);
+                    directoryList.put(newDir, args);
+                }
+            }
+        } else {
+            directoryList.put(newDir, null);
+        }
 
-        if (newDir.exists()) {
-            directoryList.add(newDir);
-            dListView.getItems().clear();
-            for (int i = 0; i < directoryList.size(); i++)
-                dListView.getItems().add(directoryList.get(i));
-        } else
-            System.out.println("Error with file");
+        dListView.getItems().clear();
+        directoryList.forEach((k, v) -> dListView.getItems().add(k));
+    }
+
+    public String[] checkConfig(File file) {
+        String[] args = {};
+        try {
+            Scanner myReader = new Scanner(file);
+            while (myReader.hasNextLine())
+                args = myReader.nextLine().split("\\s+");
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        return args;
     }
 
     public void moveFiles(ActionEvent actionEvent) throws IOException {
@@ -79,6 +107,7 @@ public class FileManageController {
             String ext = getExtension(file.getName());
             System.out.println(ext);
 
+            /*
             if (ext.equals("mp3") || ext.equals("wav") || ext.equals("ogg")) {
                 moveFile(file.getAbsolutePath(), audioPath + "\\" + file.getName());
             }
@@ -97,6 +126,19 @@ public class FileManageController {
             else if (ext.equals("pdf")) {
                 moveFile(file.getAbsolutePath(), pdfPath + "\\" + file.getName());
             }
+            */
+
+            directoryList.forEach((k, v) ->
+            {
+                if (k != null) {
+                    for (int i = 0; i < v.length; i++) {
+                        if (ext.equals(v[i])) {
+                            moveFile(file.getAbsolutePath(), k.getAbsolutePath() + "\\" + file.getName());
+                        }
+                    }
+                }
+            });
+
             listView.getItems().clear();
             loadDirectory();
         }
@@ -118,7 +160,7 @@ public class FileManageController {
     }
 
     public void listSelected(MouseEvent fileEditEvent) {
-        if (!listView.getItems().isEmpty()) {
+        if (!listView.getItems().isEmpty() && listView.getSelectionModel().getSelectedIndex() != -1) {
             int index = listView.getSelectionModel().getSelectedIndex();
             nameLabel.setText(fileList[index].getName());
             lastMod.setText(String.valueOf(fileList[index].lastModified()));
@@ -126,6 +168,23 @@ public class FileManageController {
             if (!ext.isEmpty())
                 fileType.setText(getExtension(fileList[index].getName()));
             else fileType.setText("directory");
+        }
+    }
+
+    public void destListSelected(MouseEvent mouseEvent) {
+        if (!dListView.getItems().isEmpty() && dListView.getSelectionModel().getSelectedIndex() != -1) {
+            File selectedItem = dListView.getSelectionModel().getSelectedItem();
+            nameLabelDest.setText(selectedItem.getName());
+            lastModDest.setText(String.valueOf(selectedItem.lastModified()));
+            extensions.setText(Arrays.toString(directoryList.get(selectedItem)));
+        }
+    }
+
+    public void destinationExtSubmit(ActionEvent actionEvent) {
+        if (!dListView.getItems().isEmpty() && !listView.getItems().isEmpty()) {
+            File selectedItem = dListView.getSelectionModel().getSelectedItem();
+            String[] extInput = destExtInput.getText().split("\\s+");
+            directoryList.put(selectedItem, extInput);
         }
     }
 }
