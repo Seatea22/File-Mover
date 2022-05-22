@@ -7,10 +7,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class FileManageApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("manager-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(FileManageApplication.class.getResource("manager-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 640, 430);
         stage.setTitle("Download Manager");
         stage.setScene(scene);

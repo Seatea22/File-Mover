@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.*;
 import java.util.Objects;
 
-public class HelloController {
+public class FileManageController {
 
     File mainDirectory;
     File[] fileList;

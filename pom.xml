@@ -80,7 +80,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.dlmanage.dlmanage/com.dlmanage.dlmanage.HelloApplication</mainClass>
+                            <mainClass>com.dlmanage.dlmanage/com.dlmanage.dlmanage.FileManageApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>
