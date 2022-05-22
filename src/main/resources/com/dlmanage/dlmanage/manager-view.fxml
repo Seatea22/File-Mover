@@ -101,6 +101,6 @@
             </SplitPane>
       </children>
     </AnchorPane>
-      <Button fx:id="moveButton" mnemonicParsing="false" onAction="#moveFiles" text="Move" />
+      <Button fx:id="moveButton" mnemonicParsing="false" onAction="#moveButtonPressed" text="Move" />
   </children>
 </VBox>
